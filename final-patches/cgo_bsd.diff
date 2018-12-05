@@ -1,0 +1,11 @@
+--- A/go/src/net/cgo_bsd.go	2018-11-02 21:23:31.000000000 +0000
++++ B/go/src/net/cgo_bsd.go	2018-12-05 05:21:03.160051710 +0000
+@@ -9,6 +9,8 @@
+ 
+ /*
+ #include <netdb.h>
++#cgo darwin,arm64 LDFLAGS: --sysroot=/usr/SDK -I/usr/local/include -I/usr/include -L/usr/local/lib -L/usr/lib -F/usr/SDK/System/Library/Frameworks/ -framework CoreFoundation
++#cgo darwin,arm64 CFLAGS: --sysroot=/usr/SDK -I/usr/local/include -I/usr/include -L/usr/local/lib -L/usr/lib -F/usr/SDK/System/Library/Frameworks/ -framework CoreFoundation -Wno-unused-command-line-argument
+ */
+ import "C"
+ 

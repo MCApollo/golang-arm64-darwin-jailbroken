@@ -1,0 +1,7 @@
+Review this:
+go/src/cmd/link/internal/ld/lib.go:		isIOS, err := machoCombineDwarf(ctxt, *flagOutfile, dsym, combinedOutput)
+go/src/cmd/link/internal/ld/lib.go:		if !isIOS {
+
+
+Have C{C,XX} return clang/clang++ and not the cross-triple
+	defaultcc is the function that returns this.

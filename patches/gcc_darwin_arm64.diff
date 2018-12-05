@@ -1,0 +1,67 @@
+--- A/go/src/runtime/cgo/gcc_darwin_arm64.c	2018-11-02 21:23:31.000000000 +0000
++++ B/go/src/runtime/cgo/gcc_darwin_arm64.c	2018-12-05 00:04:32.054969341 +0000
+@@ -93,58 +93,6 @@
+ 	return nil;
+ }
+ 
+-// init_working_dir sets the current working directory to the app root.
+-// By default darwin/arm processes start in "/".
+-static void
+-init_working_dir()
+-{
+-	CFBundleRef bundle = CFBundleGetMainBundle();
+-	if (bundle == NULL) {
+-		fprintf(stderr, "runtime/cgo: no main bundle\n");
+-		return;
+-	}
+-	CFURLRef url_ref = CFBundleCopyResourceURL(bundle, CFSTR("Info"), CFSTR("plist"), NULL);
+-	if (url_ref == NULL) {
+-		fprintf(stderr, "runtime/cgo: no Info.plist URL\n");
+-		return;
+-	}
+-	CFStringRef url_str_ref = CFURLGetString(url_ref);
+-	char buf[MAXPATHLEN];
+-	Boolean res = CFStringGetCString(url_str_ref, buf, sizeof(buf), kCFStringEncodingUTF8);
+-	CFRelease(url_ref);
+-	if (!res) {
+-		fprintf(stderr, "runtime/cgo: cannot get URL string\n");
+-		return;
+-	}
+-
+-	// url is of the form "file:///path/to/Info.plist".
+-	// strip it down to the working directory "/path/to".
+-	int url_len = strlen(buf);
+-	if (url_len < sizeof("file://")+sizeof("/Info.plist")) {
+-		fprintf(stderr, "runtime/cgo: bad URL: %s\n", buf);
+-		return;
+-	}
+-	buf[url_len-sizeof("/Info.plist")+1] = 0;
+-	char *dir = &buf[0] + sizeof("file://")-1;
+-
+-	if (chdir(dir) != 0) {
+-		fprintf(stderr, "runtime/cgo: chdir(%s) failed\n", dir);
+-	}
+-
+-	// The test harness in go_darwin_arm_exec passes the relative working directory
+-	// in the GoExecWrapperWorkingDirectory property of the app bundle.
+-	CFStringRef wd_ref = CFBundleGetValueForInfoDictionaryKey(bundle, CFSTR("GoExecWrapperWorkingDirectory"));
+-	if (wd_ref != NULL) {
+-		if (!CFStringGetCString(wd_ref, buf, sizeof(buf), kCFStringEncodingUTF8)) {
+-			fprintf(stderr, "runtime/cgo: cannot get GoExecWrapperWorkingDirectory string\n");
+-			return;
+-		}
+-		if (chdir(buf) != 0) {
+-			fprintf(stderr, "runtime/cgo: chdir(%s) failed\n", buf);
+-		}
+-	}
+-}
+-
+ void
+ x_cgo_init(G *g, void (*setg)(void*), void **tlsg, void **tlsbase)
+ {
+@@ -164,5 +112,4 @@
+ 	darwin_arm_init_mach_exception_handler();
+ 	darwin_arm_init_thread_exception_port();
+ 
+-	init_working_dir();
+ }

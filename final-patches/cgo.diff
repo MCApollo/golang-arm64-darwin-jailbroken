@@ -1,0 +1,18 @@
+--- A/go/src/runtime/cgo/cgo.go	2018-11-02 21:23:31.000000000 +0000
++++ B/go/src/runtime/cgo/cgo.go	2018-12-05 00:30:27.248365332 +0000
+@@ -13,7 +13,6 @@
+ 
+ #cgo darwin,!arm,!arm64 LDFLAGS: -lpthread
+ #cgo darwin,arm LDFLAGS: -framework CoreFoundation
+-#cgo darwin,arm64 LDFLAGS: -framework CoreFoundation
+ #cgo dragonfly LDFLAGS: -lpthread
+ #cgo freebsd LDFLAGS: -lpthread
+ #cgo android LDFLAGS: -llog
+@@ -25,5 +24,7 @@
+ 
+ #cgo solaris CPPFLAGS: -D_POSIX_PTHREAD_SEMANTICS
+ 
++#cgo darwin,arm64 LDFLAGS: --sysroot=/usr/SDK -I/usr/local/include -I/usr/include -L/usr/local/lib -L/usr/lib -F/usr/SDK/System/Library/Frameworks/ -framework CoreFoundation
++#cgo darwin,arm64 CFLAGS: --sysroot=/usr/SDK -I/usr/local/include -I/usr/include -L/usr/local/lib -L/usr/lib -F/usr/SDK/System/Library/Frameworks/ -framework CoreFoundation -Wno-unused-command-line-argument
+ */
+ import "C"

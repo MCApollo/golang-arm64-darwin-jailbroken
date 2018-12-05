@@ -1,0 +1,11 @@
+--- A/go/src/os/user/cgo_lookup_unix.go	2018-11-02 21:23:31.000000000 +0000
++++ B/go/src/os/user/cgo_lookup_unix.go	2018-12-05 05:16:23.739752573 +0000
+@@ -17,6 +17,8 @@
+ 
+ /*
+ #cgo solaris CFLAGS: -D_POSIX_PTHREAD_SEMANTICS
++#cgo darwin,arm64 LDFLAGS: --sysroot=/usr/SDK -I/usr/local/include -I/usr/include -L/usr/local/lib -L/usr/lib -F/usr/SDK/System/Library/Frameworks/ -framework CoreFoundation
++#cgo darwin,arm64 CFLAGS: --sysroot=/usr/SDK -I/usr/local/include -I/usr/include -L/usr/local/lib -L/usr/lib -F/usr/SDK/System/Library/Frameworks/ -framework CoreFoundation -Wno-unused-command-line-argument
+ #include <unistd.h>
+ #include <sys/types.h>
+ #include <pwd.h>

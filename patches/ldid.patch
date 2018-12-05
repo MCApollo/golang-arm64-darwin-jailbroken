@@ -1,0 +1,27 @@
+--- A/go/src/cmd/link/internal/ld/main.go	2018-11-02 21:23:31.000000000 +0000
++++ B/go/src/cmd/link/internal/ld/main.go	2018-12-05 02:34:58.879028694 +0000
+@@ -38,6 +38,7 @@
+ 	"flag"
+ 	"log"
+ 	"os"
++	"os/exec"
+ 	"runtime"
+ 	"runtime/pprof"
+ 	"strings"
+@@ -246,6 +247,16 @@
+ 
+ 	ctxt.Bso.Flush()
+ 
++	// MCApollo: A dirty hack for iDevice native compiling
++	// without requring the device to disable codesign enforcement
++	if nerrors == 0 && ctxt.HeadType == objabi.Hdarwin {
++		Outfile := *flagOutfile
++		cmd := exec.Command("ldid", "-S/usr/local/libexec/go/x.ent", Outfile)
++		if err := cmd.Run(); err != nil && ctxt.Debugvlog != 0 {
++			ctxt.Logf("ldid failed to signed outfile\n")
++		}
++	}
++
+ 	errorexit()
+ }
+ 

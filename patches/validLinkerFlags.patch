@@ -1,0 +1,19 @@
+--- A/go/src/cmd/go/internal/work/security.go	2018-11-02 21:23:31.000000000 +0000
++++ B/go/src/cmd/go/internal/work/security.go	2018-12-05 03:19:39.493257546 +0000
+@@ -41,6 +41,7 @@
+ 
+ var validCompilerFlags = []*regexp.Regexp{
+ 	re(`-D([A-Za-z_].*)`),
++	re(`-L([^@\-].*)`),
+ 	re(`-F([^@\-].*)`),
+ 	re(`-I([^@\-].*)`),
+ 	re(`-O`),
+@@ -128,6 +129,8 @@
+ }
+ 
+ var validLinkerFlags = []*regexp.Regexp{
++	re(`-I([^@\-].*)`),
++	re(`--sysroot=([^@\-].*)`),
+ 	re(`-F([^@\-].*)`),
+ 	re(`-l([^@\-].*)`),
+ 	re(`-L([^@\-].*)`),
