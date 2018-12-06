@@ -1,0 +1,18 @@
+--- A/go/src/cmd/go/internal/work/buildid.go	2018-11-02 21:23:31.000000000 +0000
++++ B/go/src/cmd/go/internal/work/buildid.go	2018-12-06 04:29:27.544058177 +0000
+@@ -660,6 +660,15 @@
+ 		if err := w.Close(); err != nil {
+ 			return err
+ 		}
++
++	// MCApollo: Rehash/sign binary (again) because it has changed.
++	// Hacky workaround for iOS codesigning.
++		if strings.Contains(target, "a.out") {
++			cmd := exec.Command("ldid", "-S/usr/local/libexec/go/x.ent", target) // --> target string
++			if err := cmd.Run(); err != nil && (cfg.BuildX || cfg.BuildN) { // Just fail peacefully, the user can just sign this themself.
++				b.Showcmd("", "ldid -S %s # internal", target)
++			}
++		}
+ 	}
+ 
+ 	// Cache package builds, but not binaries (link steps).
